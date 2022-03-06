@@ -4,6 +4,7 @@ import numpy as np
 
 
 def loss_coteaching(y_1, y_2, t, forget_rate, ind, noise_or_not):
+    # TODO: add mix criterion from mixup
     loss_1 = F.cross_entropy(y_1, t, reduce=False)
     loss_1 = loss_1.cpu()
     ind_1_sorted = np.argsort(loss_1.data)
