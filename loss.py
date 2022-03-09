@@ -5,7 +5,7 @@ from mixup import mixup_criterion
 
 
 def loss_coteaching(criterion, y_1, y_2, t, label_a, label_b, forget_rate, ind, noise_or_not, lam):
-    # TODO: add mix criterion from mixup
+
     # loss_1 = F.cross_entropy(y_1, t, reduce=False)
     loss_1 = mixup_criterion(criterion, y_1, label_a, label_b, lam)
     loss_1 = loss_1.cpu()
@@ -21,8 +21,11 @@ def loss_coteaching(criterion, y_1, y_2, t, label_a, label_b, forget_rate, ind, 
     remember_rate = 1 - forget_rate
     num_remember = int(remember_rate * len(loss_1_sorted))
 
-    pure_ratio_1 = np.sum(noise_or_not[ind[ind_1_sorted[:num_remember]]]) / float(num_remember)
-    pure_ratio_2 = np.sum(noise_or_not[ind[ind_2_sorted[:num_remember]]]) / float(num_remember)
+    if noise_or_not is None:
+        pure_ratio_1, pure_ratio_2 = None, None
+    else:
+        pure_ratio_1 = np.sum(noise_or_not[ind[ind_1_sorted[:num_remember]]]) / float(num_remember)
+        pure_ratio_2 = np.sum(noise_or_not[ind[ind_2_sorted[:num_remember]]]) / float(num_remember)
 
     ind_1_update = ind_1_sorted[:num_remember]
     ind_2_update = ind_2_sorted[:num_remember]
