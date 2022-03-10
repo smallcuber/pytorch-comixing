@@ -53,10 +53,10 @@ class Animal10N(Dataset):
     # def update_corrupted_label(self, noise_label):
     #     self.targets[:] = noise_label[:]
 
-
-if __name__ == '__main__':
-    _dir = 'rawdata_ANIMAL10N'
-    ds_test = Animal10N(split='test')
-    loader_test = DataLoader(dataset=ds_test, batch_size=128, shuffle=True, num_workers=6)
-
-    image, label, index = loader_test
+#
+# if __name__ == '__main__':
+#     _dir = 'rawdata_ANIMAL10N'
+#     ds_test = Animal10N(split='test')
+#     loader_test = DataLoader(dataset=ds_test, batch_size=128, shuffle=True, num_workers=6)
+#
+#     image, label, index = loader_test
