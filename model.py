@@ -68,3 +68,9 @@ class CNN(nn.Module):
         if self.top_bn:
             logit = call_bn(self.bn_c1, logit)
         return logit
+
+
+def loadModelByName(model_name):
+
+
+    return model_name
