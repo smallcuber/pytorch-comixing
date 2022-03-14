@@ -70,7 +70,43 @@ class CNN(nn.Module):
         return logit
 
 
-def loadModelByName(model_name):
+class ReshapedPreTrainedModel(nn.Module):
+    def __init__(self, imported_model, n_outputs=10, dropout_rate=0.25, freeze_weights=False):
+        # self.pre_trained_model = pre_trained_model
+        super().__init__()
+        self.pre_trained_model = imported_model
+        self.n_outputs = n_outputs
+        self.dropout_rate = dropout_rate
+
+        if freeze_weights:
+            for param in self.pre_trained_model.parameters():
+                param.requires_grad = False
+
+        self.fc1 = nn.Linear(1000, 256)
+        self.fc2 = nn.Linear(256, self.n_outputs)
+        self.dropout = nn.Dropout(0.25)
+        self.relu = nn.LeakyReLU()
+
+    def forward(self, image):
+        x = self.pre_trained_model(image)
+        x = x.view(x.size(0), -1)
+        x = self.dropout(self.relu(self.fc1(x)))
+        x = self.fc2(x)
+        return x
 
 
-    return model_name
+dict_models = {
+    "CNN": CNN,
+    "EfficientNet_v2_s": "tf_efficientnetv2_s_in21ft1k",
+    "EfficientNet_v2_m": "tf_efficientnetv2_m_in21ft1k",
+    "EfficientNet_v2_rw_t": "efficientnetv2_rw_t",
+    "EfficientNet_b0": "efficientnet_b0",
+    "EfficientNet_b1": "efficientnet_b1",
+    "EfficientNet_b2": "efficientnet_b2",
+    "EfficientNet_b3": "efficientnet_b3"
+}
+
+
+def load_pretrained_model_by_name(model_name):
+    return torch.hub.load('rwightman/pytorch-image-models', dict_models[model_name])
+
