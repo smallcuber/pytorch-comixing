@@ -68,3 +68,58 @@ class CNN(nn.Module):
         if self.top_bn:
             logit = call_bn(self.bn_c1, logit)
         return logit
+
+
+class ReshapedPreTrainedModel(nn.Module):
+    def __init__(self, imported_model, n_outputs=10, dropout_rate=0.25, freeze_weights=False):
+        # self.pre_trained_model = pre_trained_model
+        super().__init__()
+        self.pre_trained_model = imported_model
+        self.n_outputs = n_outputs
+        self.dropout_rate = dropout_rate
+
+        if freeze_weights:
+            for param in self.pre_trained_model.parameters():
+                param.requires_grad = False
+
+        self.fc1 = nn.Linear(1000, 512)
+        self.fc2 = nn.Linear(512, self.n_outputs)
+        self.dropout = nn.Dropout(0.25)
+        self.relu = nn.LeakyReLU()
+
+    def forward(self, image):
+        x = self.pre_trained_model(image)
+        x = x.view(x.size(0), -1)
+        x = self.dropout(self.relu(self.fc1(x)))
+        x = self.fc2(x)
+        return x
+
+
+dict_models = {
+    "CNN": CNN,
+    "EfficientNet_v2_s": "tf_efficientnetv2_s_in21ft1k",
+    "EfficientNet_v2_m": "tf_efficientnetv2_m_in21ft1k",
+    "EfficientNet_v2_rw_t": "efficientnetv2_rw_t",
+    "EfficientNet_b0": "efficientnet_b0",
+    "EfficientNet_b1": "efficientnet_b1",
+    "EfficientNet_b2": "efficientnet_b2",
+    "EfficientNet_b3": "efficientnet_b3",
+    "Densenet121": "densenet121",
+    "Mobilenet_v2_035": "mobilenetv2_035",
+    "Mobilenet_v2_100": "mobilenetv2_100",
+}
+
+
+def load_pretrained_model_by_name(model_name, is_pretrained=True):
+    return torch.hub.load('rwightman/pytorch-image-models', dict_models[model_name], pretrained=is_pretrained)
+
+
+def modify_pretrained_outputs(model, num_output=10, freeze_parameters=True):
+    if freeze_parameters:
+        for param in model.parameters():
+            param.requires_grad = False
+
+    num_input = model.classifier.in_features
+    model.classifier = torch.nn.Linear(num_input, num_output, bias=True).to(device)
+    # model.classifier.requires_grad = True
+    return model
