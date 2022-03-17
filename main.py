@@ -131,7 +131,7 @@ def train(loader_train, epoch, model1, optimizer1, model2, optimizer2, criterion
         labels = Variable(labels).to(device)
         num_total = labels.size(0)
 
-        images, label_a, label_b, lam = mixup_data(images, labels, num_mixup_alpha, True)
+        images, label_a, label_b, lam = mixup_data(images, labels, device, num_mixup_alpha, True)
 
         # Forward Backward Optimize
         output1 = model1(images)

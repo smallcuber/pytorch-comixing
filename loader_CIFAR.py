@@ -125,7 +125,7 @@ class CifarDataloader:
                 dataset=train_dataset,
                 batch_size=self.batch_size,
                 shuffle=True,
-                num_workers=self.num_workers)
+                num_workers=self.num_workers, pin_memory=True)
             return trainloader, np.asarray(train_dataset.noise_label), np.asarray(train_dataset.clean_label)
 
         elif mode == 'test':
@@ -135,5 +135,5 @@ class CifarDataloader:
                 dataset=test_dataset,
                 batch_size=self.batch_size,
                 shuffle=False,
-                num_workers=self.num_workers)
+                num_workers=self.num_workers, pin_memory=True)
             return test_loader

@@ -82,8 +82,8 @@ class ReshapedPreTrainedModel(nn.Module):
             for param in self.pre_trained_model.parameters():
                 param.requires_grad = False
 
-        self.fc1 = nn.Linear(1000, 256)
-        self.fc2 = nn.Linear(256, self.n_outputs)
+        self.fc1 = nn.Linear(1000, 512)
+        self.fc2 = nn.Linear(512, self.n_outputs)
         self.dropout = nn.Dropout(0.25)
         self.relu = nn.LeakyReLU()
 
@@ -103,10 +103,23 @@ dict_models = {
     "EfficientNet_b0": "efficientnet_b0",
     "EfficientNet_b1": "efficientnet_b1",
     "EfficientNet_b2": "efficientnet_b2",
-    "EfficientNet_b3": "efficientnet_b3"
+    "EfficientNet_b3": "efficientnet_b3",
+    "Densenet121": "densenet121",
+    "Mobilenet_v2_035": "mobilenetv2_035",
+    "Mobilenet_v2_100": "mobilenetv2_100",
 }
 
 
-def load_pretrained_model_by_name(model_name):
-    return torch.hub.load('rwightman/pytorch-image-models', dict_models[model_name])
+def load_pretrained_model_by_name(model_name, is_pretrained=True):
+    return torch.hub.load('rwightman/pytorch-image-models', dict_models[model_name], pretrained=is_pretrained)
 
+
+def modify_pretrained_outputs(model, num_output=10, freeze_parameters=True):
+    if freeze_parameters:
+        for param in model.parameters():
+            param.requires_grad = False
+
+    num_input = model.classifier.in_features
+    model.classifier = torch.nn.Linear(num_input, num_output, bias=True).to(device)
+    # model.classifier.requires_grad = True
+    return model
