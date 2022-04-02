@@ -1,0 +1,5 @@
+.ipynb_checkpoints/
+.idea/
+efficientnetv2_rw_t.txt
+efficientnetv2_rw_t parameters.txt
+testRun.ipynb
