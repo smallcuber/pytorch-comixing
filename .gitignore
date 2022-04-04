@@ -1,5 +1,8 @@
 .ipynb_checkpoints/
 .idea/
+exportToHTML/
+rawdata_ANIMAL10N/
+rawdata_CIFAR10/
 efficientnetv2_rw_t.txt
 efficientnetv2_rw_t parameters.txt
 testRun.ipynb

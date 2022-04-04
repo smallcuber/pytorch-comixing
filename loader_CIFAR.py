@@ -18,6 +18,7 @@ class CifarDataset(Dataset):
 
         self.transform = transform
         self.mode = mode
+        self.label_names = []
         self.transition = {0: 0, 2: 0, 4: 7, 7: 7, 1: 1, 9: 1, 3: 5, 5: 3, 6: 6,
                            8: 8}  # class transition for asymmetric noise for cifar10
         # generate asymmetric noise for cifar100
@@ -59,9 +60,7 @@ class CifarDataset(Dataset):
                 # print(len(train_label))
             train_data = train_data.reshape((50000, 3, 32, 32))
             train_data = train_data.transpose((0, 2, 3, 1))
-
             noise_label = json.load(open(noise_file, "r"))
-
             if self.mode == 'train':
                 self.train_data = train_data
                 self.noise_label = noise_label
@@ -93,6 +92,7 @@ class CifarDataloader:
         self.num_workers = num_workers
         self.root_dir = root_dir
         self.noise_file = noise_file
+        self.label_names = []
         if self.dataset == 'cifar10':
             self.transform_train = transforms.Compose([
                 transforms.RandomCrop(32, padding=4),
