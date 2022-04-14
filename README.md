@@ -7,3 +7,6 @@ torchSummary
 torchvision
 optuna
 mysqlclient
+
+Recommended to run the following in Jupyter Notebook.
+main.ipynb 
