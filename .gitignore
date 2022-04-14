@@ -1,0 +1,17 @@
+.ipynb_checkpoints/
+.idea/
+.backups/
+.mysql_server_backup/
+exportToHTML/
+rawdata_ANIMAL10N/
+rawdata_CIFAR10/
+charts/
+sql table/
+models/
+co_mixing/
+__pycache__/
+efficientnetv2_rw_t.txt
+efficientnetv2_rw_t parameters.txt
+testRun.ipynb
+cifar10_Task1_2022_03_17_unfreeze_efficientnet.db
+cifar10_Task2_2022_03_17_unfreeze_efficientnet.db
